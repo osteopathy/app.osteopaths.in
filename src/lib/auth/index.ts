@@ -75,7 +75,7 @@ export const validateRequest = cache(
 
 import { Google } from "arctic";
 
-export const google = new Google(process.env.GITHUB_CLIENT_ID!, process.env.GITHUB_CLIENT_SECRET!, process.env.NODE_ENV === "production" ? process.env.GITHUB_REDIRECT_URI! : 'http://localhost:3000');
+export const google = new Google(process.env.GOOGLE_CLIENT_ID!, process.env.GOOGLE_CLIENT_SECRET!, process.env.NODE_ENV === "production" ? process.env.GOOGLE_REDIRECT_URI! : 'http://localhost:3000/google/callback');
 
 declare module "lucia" {
 	interface Register {

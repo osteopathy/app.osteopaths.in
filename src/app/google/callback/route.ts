@@ -1,7 +1,7 @@
 import { google, lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { OAuth2RequestError } from "arctic";
-import { generateIdFromEntropySize } from "lucia";
+import { generateId, generateIdFromEntropySize } from "lucia";
 import e from "@/lib/edgeql-js"
 import { client } from "@/lib/db";
 
@@ -32,19 +32,26 @@ export async function GET(request: Request): Promise<Response> {
 	}    
 
 	try {
+		console.log("VALIDATING AUTH CODE")
 		const tokens = await google.validateAuthorizationCode(code, codeVerifier);
+        console.log("AUTH CODE VALIDATED",tokens)
+		console.log("FETCHING USER INFO")
+		const response = await fetch("https://openidconnect.googleapis.com/v1/userinfo", {
+            headers: {
+                Authorization: `Bearer ${tokens.accessToken}`,
+            },
+        });
+        // const googleUserInfoResponse = await fetch(
+		// 	`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${tokens.accessToken}`,
+		// 	{
+		// 		headers: {
+		// 			Authorization: `Bearer ${tokens.idToken}`
+		// 		}
+		// 	}
+		// )
         
-        const googleUserInfoResponse = await fetch(
-			`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${tokens.accessToken}`,
-			{
-				headers: {
-					Authorization: `Bearer ${tokens.idToken}`
-				}
-			}
-		)
-        
-        const googleUser: GoogleUserResult = await googleUserInfoResponse.json();
-        
+        const googleUser: GoogleUserResult = await response.json();
+		console.log("USER INFO",JSON.stringify(googleUser,null,2))
         if (!googleUser?.email) {
 			return new Response(null, {
 				status: 302,
@@ -61,8 +68,9 @@ export async function GET(request: Request): Promise<Response> {
 				filter_single: { email: googleUser.email },
 			})).run(client)
         : false;
-
 		if (existingUser) {
+			console.log("EXISTING USER")
+			
 			const session = await lucia.createSession(existingUser.id, {});
 			const sessionCookie = lucia.createSessionCookie(session.id);
 			cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
@@ -73,9 +81,9 @@ export async function GET(request: Request): Promise<Response> {
 				}
 			});
 		}
-
-		const userId = generateIdFromEntropySize(10); // 16 characters long
-
+		console.log("NEW USER")
+		const userId = generateId(15); // 16 characters long
+		console.log("INSERTING USER")
 		// Replace this with your own DB client.
 		await e.insert(e.User, {
 			email: googleUser.email,
@@ -83,6 +91,8 @@ export async function GET(request: Request): Promise<Response> {
 			picture: googleUser.name,
 			role: e.Role.User
 		}).run(client);
+
+		console.log("USER INSERTED")
 
 		const session = await lucia.createSession(userId, {});
 		const sessionCookie = lucia.createSessionCookie(session.id);

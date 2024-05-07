@@ -1,47 +1,14 @@
+import { validateRequest } from "@/lib/auth";
 import Image from "next/image";
-import e from '@/lib/edgeql-js';
-import { client } from "@/lib/db";
-
 
 export default async function Home() {
-  // const users = e.select(e.User, () => ({
-  //   id: true,
-  //   email: true,
-  // }))
-  // const user = await users.run(client);
-  // console.log(user)
-
-  const user = await e.select(e.User, user => ({
-    sessions: {
-      ...e.Session['*']
-    },
-  })).run(client);
-  console.log(user[0].sessions);
-  // await e.delete(e.Session, session => ({
-  //   filter: e.op(session.expiresAt, "<", new Date()),
-  // })).run(client)
-  //   const sessionId = 'a4ca0e20-0b02-11ef-a17a-c302a9df170f';
-  //   const session = await e.select(e.Session, session => ({
-  //     id: true,
-  //     expiresAt: true,
-  //     user: {
-  //       ...e.User['*']
-  //     },
-  //     filter_single: { id: sessionId },
-  // })).run(client);
-  // const session = await e.insert(e.Session,{
-  //   expiresAt:  new Date(),
-  //   user: e.select(e.User, (_) => ({
-  //     filter_single: {id: user[0].id},
-  //   }))
-  // }).run(client)
-  // console.log(session);
+  const { user, session } = await validateRequest()
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
+          {user?.id}&nbsp;
+          <code className="font-mono font-bold">{session?.id}</code>
         </p>
         <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
           <a
