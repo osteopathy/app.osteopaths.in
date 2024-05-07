@@ -8,9 +8,15 @@ module default {
     }
     
     type User {
-        required email: str;
-        multi link sessions := .<user[is Session];
+        required email: str {
+            constraint exclusive;
+        };
 
+        name: str;
+        picture: str;
+        role: Role;
+
+        multi link sessions := .<user[is Session];
         createdAt: datetime {
             rewrite insert using (datetime_of_statement());
         }
@@ -18,5 +24,6 @@ module default {
             rewrite insert using (datetime_of_statement());
             rewrite update using (datetime_of_statement());
         }
+        index on (.email)
     }
 }

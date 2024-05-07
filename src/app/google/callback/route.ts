@@ -1,8 +1,9 @@
-import { google, lucia } from "@/lib/server/lucia";
+import { google, lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { OAuth2RequestError } from "arctic";
 import { generateIdFromEntropySize } from "lucia";
 import e from "@/lib/edgeql-js"
+import { client } from "@/lib/db";
 
 type GoogleUserResult = {
 	id: string;
@@ -14,14 +15,6 @@ type GoogleUserResult = {
 	picture: string;
 	locale: string;
 };
-
-const getUserByEmail = async (email: string) => {
-      const users = e.select(e.User, () => ({
-    id: true,
-    email: true,
-  }))
-  const user = await users.run(client);
-}
 
 export async function GET(request: Request): Promise<Response> {
 	const url = new URL(request.url);
@@ -63,12 +56,10 @@ export async function GET(request: Request): Promise<Response> {
         
 		// Replace this with your own DB client.
         let existingUser = googleUser.email
-            ? await db.query.userTable.findFirst({
-                where: eq(userTable.email, payload.email),
-                columns: {
-                    id: true
-                }
-            })
+            ? await e.select(e.User, (_) => ({
+				id: true,
+				filter_single: { email: googleUser.email },
+			})).run(client)
         : false;
 
 		if (existingUser) {
@@ -86,11 +77,12 @@ export async function GET(request: Request): Promise<Response> {
 		const userId = generateIdFromEntropySize(10); // 16 characters long
 
 		// Replace this with your own DB client.
-		await db.table("user").insert({
-			id: userId,
-			github_id: githubUser.id,
-			username: githubUser.login
-		});
+		await e.insert(e.User, {
+			email: googleUser.email,
+			name: googleUser.name,
+			picture: googleUser.name,
+			role: e.Role.User
+		}).run(client);
 
 		const session = await lucia.createSession(userId, {});
 		const sessionCookie = lucia.createSessionCookie(session.id);
@@ -100,7 +92,7 @@ export async function GET(request: Request): Promise<Response> {
 			headers: {
 				Location: "/"
 			}
-		});
+		})
 	} catch (e) {
 		// the specific error message depends on the provider
 		if (e instanceof OAuth2RequestError) {
@@ -113,9 +105,4 @@ export async function GET(request: Request): Promise<Response> {
 			status: 500
 		});
 	}
-}
-
-interface GitHubUser {
-	id: string;
-	login: string;
 }

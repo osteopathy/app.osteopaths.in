@@ -1,8 +1,7 @@
 import Image from "next/image";
-import { createClient } from 'edgedb';
 import e from '@/lib/edgeql-js';
+import { client } from "@/lib/db";
 
-const client = createClient();
 
 export default async function Home() {
   // const users = e.select(e.User, () => ({
