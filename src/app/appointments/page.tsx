@@ -1,6 +1,6 @@
 "use client";
 import { Calendar } from "@/components/ui/calendar";
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 type PatientDetails = {
   concern: string;
@@ -58,16 +58,44 @@ function Appointment({
 function TimelineItem({
   date,
   patientDetails,
+  setDate,
 }: {
-  date: string;
+  date: Date;
+  setDate: Dispatch<SetStateAction<Date | undefined>>;
   patientDetails?: PatientDetails | undefined;
 }) {
-  
+  const renderedDate =
+    date.getDate() + " " + date.toLocaleString("default", { month: "short" });
+
+  const timelineRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    // Check if the item is at top
+    window.addEventListener("scroll", () => {
+      if (timelineRef)
+        if (
+          timelineRef.current!.getBoundingClientRect().y >= 0 &&
+          timelineRef.current!.getBoundingClientRect().y <= 80
+        ) {
+          // TODO: optimize this part
+          setDate(date);
+        }
+    });
+
+    return () => {
+      window.removeEventListener('scroll', ()=>{});
+    }
+  }, [timelineRef, setDate, date]);
+
   return (
     <div className="h-max py-[50px] w-full transition-all duration-500">
       <div className="sticky top-0 pt-[24px]">
-        <h4 id={date.replace(" ", "")} className="text-[21px] font-bold timeline-item ">
-          {date}
+        <h4
+          id={renderedDate.replace(" ", "")}
+          className="text-[21px] font-bold timeline-item "
+          ref={timelineRef}
+        >
+          {renderedDate}
         </h4>
       </div>
       <Timeline time={"6 AM"} />
@@ -93,9 +121,10 @@ export default function AppointmentsPage() {
       <div className="max-w-[800px] h-[4000px] flex gap-[54px] mx-auto justify-between">
         <div className="flex-[1_0_auto]">
           {/* Whole Timeline */}
-          <div className="h-max w-full" id='timelinewrapper'>
+          <div className="h-max w-full" id="timelinewrapper">
             <TimelineItem
-              date={"7 May"}
+              setDate={setDate}
+              date={new Date("05/07/2024")}
               patientDetails={{
                 time: "8:00",
                 concern: "Arthritis",
@@ -103,9 +132,10 @@ export default function AppointmentsPage() {
                 contactNumber: "+91 9999999999",
               }}
             />
-            <TimelineItem date={"8 May"} />
+            <TimelineItem date={new Date("05/08/2024")} setDate={setDate} />
             <TimelineItem
-              date={"9 May"}
+              setDate={setDate}
+              date={new Date("05/09/2024")}
               patientDetails={{
                 time: "8:00",
                 concern: "Arthritis",
@@ -113,10 +143,11 @@ export default function AppointmentsPage() {
                 contactNumber: "+91 9999999999",
               }}
             />
-            <TimelineItem date={"10 May"} />
-            <TimelineItem date={"11 May"} />
+            <TimelineItem date={new Date("05/10/2024")} setDate={setDate} />
+            <TimelineItem date={new Date("05/11/2024")} setDate={setDate} />
             <TimelineItem
-              date={"12 May"}
+              setDate={setDate}
+              date={new Date("05/12/2024")}
               patientDetails={{
                 time: "8:00",
                 concern: "Arthritis",
@@ -126,12 +157,17 @@ export default function AppointmentsPage() {
             />
           </div>
         </div>
-        <div className="pt-[74px]">
+        <div className="pt-[74px] sticky top-[74px] h-max">
           <Calendar
             mode="single"
             className="border"
             selected={date}
             onSelect={setDate}
+            onDayClick={(date) => {
+              const renderedDate = date.getDate() + date.toLocaleString("default", { month: "short" });
+              const href = window.location.href;
+              window.location.href = href.split('#')[0] + `#${renderedDate}`
+            }}
           />
         </div>
       </div>
