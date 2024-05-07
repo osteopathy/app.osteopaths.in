@@ -3,9 +3,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Lucia, type User, type Session } from "lucia";
 import { EdgeDBjAdapter } from "./edgedb-adapter"
-import e, { createClient } from "@/lib/edgeql-js";
-
-const client = createClient();
+import e from "@/lib/edgeql-js";
+import { client } from "../db";
 
 const adapter = new EdgeDBjAdapter(e,client);
 
