@@ -37,7 +37,14 @@ export class EdgeDBjAdapter implements Adapter {
     public async getSessionAndUser(
 		sessionId: string
 	): Promise<[session: DatabaseSession | null, user: DatabaseUser | null]> {
-			const session = await this.client.execute(`select Session {**} filter Session.id = <uuid>$sessionId;`, { sessionId })
+		try {
+			const session = await this.e.select(this.e.Session, _ => ({
+				...this.e.Session['*'],
+				user: {
+					...this.e.User['*']
+				},
+				filter_single: { id: sessionId },
+			})).run(this.client);
 			
 			if (!session) return [null, null];
 
@@ -47,12 +54,21 @@ export class EdgeDBjAdapter implements Adapter {
 				expiresAt: session.expiresAt,
 				id: session.id,
 				userId: session.user.id
-			}), transformIntoDatabaseUser(userResult)];			
+			}), transformIntoDatabaseUser(userResult)];
+			
+		} catch (error) {
+			console.log(error)
+			return [null,null]
+		}
 	}
 
 	public async getUserSessions(userId: UserId): Promise<DatabaseSession[]> {
-		const user = await this.client.execute(`select User {**} filter User.id = <uuid>$userId;`, { userId: userId });
-		console.log("USERS", JSON.stringify(user,null,2))
+        const user = await this.e.select(this.e.User, user => ({
+            sessions: {
+                ...this.e.Session['*']
+            },
+            filter_single: { id: userId },
+        })).run(this.client);
         return user?.sessions.map(session => ({
             userId,
             expiresAt: session.expiresAt,
@@ -62,18 +78,14 @@ export class EdgeDBjAdapter implements Adapter {
 	}
 
 	public async setSession(value: DatabaseSession): Promise<void> {
+		console.log("AUTH ADAPTER SETTING SESSION",value.expiresAt.getTime())
 		try {
-			await this.client.execute(`
-				insert Session {
-					expiresAt: <datetime>$expiresAt,
-					user := {
-						select User filter .id = <uuid>$userId
-					}
-				};
-  			`, { 
-				expiresAt: value.expiresAt, 
-				userId: value.userId
-			});
+			await this.e.insert(this.e.Session,{
+				expiresAt: value.expiresAt,
+				user: this.e.select(this.e.User, (_) => ({
+				filter_single: {id: value.userId},
+				})),
+			}).run(this.client)
 		} catch (error) {
 			console.log(error)
 		}
