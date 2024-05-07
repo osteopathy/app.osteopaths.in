@@ -70,9 +70,11 @@ export async function GET(request: Request): Promise<Response> {
         : false;
 		if (existingUser) {
 			console.log("EXISTING USER")
-			
-			const session = await lucia.createSession(existingUser.id, {});
+			console.log(existingUser)
+			console.log("CREATING NEW SESSION");
+			const session = await lucia.createSession(existingUser.id, {sessionId: ''});
 			const sessionCookie = lucia.createSessionCookie(session.id);
+			console.log("NEW SESSION CREATED");
 			cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 			return new Response(null, {
 				status: 302,
@@ -94,7 +96,7 @@ export async function GET(request: Request): Promise<Response> {
 
 		console.log("USER INSERTED")
 
-		const session = await lucia.createSession(userId, {});
+		const session = await lucia.createSession(userId, {sessionId: ''});
 		const sessionCookie = lucia.createSessionCookie(session.id);
 		cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 		return new Response(null, {
