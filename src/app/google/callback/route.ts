@@ -1,7 +1,6 @@
 import { google, lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { OAuth2RequestError } from "arctic";
-import { generateId } from "lucia";
 import e from "@/lib/edgeql-js"
 import { client } from "@/lib/db";
 import { v4 as generateUUID } from 'uuid';
@@ -99,7 +98,7 @@ export async function GET(request: Request): Promise<Response> {
 		
 		console.log("USER INSERTED")
 		console.log("CREATING NEW SESSION");
-		
+
 		const session = await lucia.createSession(user.id, { }, {sessionId: generateUUID() });
 		const sessionCookie = lucia.createSessionCookie(session.id);
 		console.log("NEW SESSION CREATED");
