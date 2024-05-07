@@ -1,6 +1,42 @@
 import Image from "next/image";
+import { createClient } from 'edgedb';
+import e from '@/lib/edgeql-js';
 
-export default function Home() {
+const client = createClient();
+
+export default async function Home() {
+  // const users = e.select(e.User, () => ({
+  //   id: true,
+  //   email: true,
+  // }))
+  // const user = await users.run(client);
+  // console.log(user)
+
+  const user = await e.select(e.User, user => ({
+    sessions: {
+      ...e.Session['*']
+    },
+  })).run(client);
+  console.log(user[0].sessions);
+  // await e.delete(e.Session, session => ({
+  //   filter: e.op(session.expiresAt, "<", new Date()),
+  // })).run(client)
+  //   const sessionId = 'a4ca0e20-0b02-11ef-a17a-c302a9df170f';
+  //   const session = await e.select(e.Session, session => ({
+  //     id: true,
+  //     expiresAt: true,
+  //     user: {
+  //       ...e.User['*']
+  //     },
+  //     filter_single: { id: sessionId },
+  // })).run(client);
+  // const session = await e.insert(e.Session,{
+  //   expiresAt:  new Date(),
+  //   user: e.select(e.User, (_) => ({
+  //     filter_single: {id: user[0].id},
+  //   }))
+  // }).run(client)
+  // console.log(session);
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
