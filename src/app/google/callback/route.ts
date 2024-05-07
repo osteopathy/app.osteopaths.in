@@ -1,9 +1,10 @@
 import { google, lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { OAuth2RequestError } from "arctic";
-import { generateId, generateIdFromEntropySize } from "lucia";
+import { generateId } from "lucia";
 import e from "@/lib/edgeql-js"
 import { client } from "@/lib/db";
+import { v4 as generateUUID } from 'uuid';
 
 type GoogleUserResult = {
 	id: string;
@@ -72,9 +73,11 @@ export async function GET(request: Request): Promise<Response> {
 			console.log("EXISTING USER")
 			console.log(existingUser)
 			console.log("CREATING NEW SESSION");
-			const session = await lucia.createSession(existingUser.id, {sessionId: ''});
+			
+			const session = await lucia.createSession(existingUser.id, { }, {sessionId: generateUUID() });
 			const sessionCookie = lucia.createSessionCookie(session.id);
 			console.log("NEW SESSION CREATED");
+			console.log(session)
 			cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 			return new Response(null, {
 				status: 302,
@@ -84,20 +87,24 @@ export async function GET(request: Request): Promise<Response> {
 			});
 		}
 		console.log("NEW USER")
-		const userId = generateId(15); // 16 characters long
-		console.log("INSERTING USER")
+
+		console.log("NEW USER")
 		// Replace this with your own DB client.
-		await e.insert(e.User, {
+		const user = await e.insert(e.User, {
 			email: googleUser.email,
 			name: googleUser.name,
 			picture: googleUser.name,
 			role: e.Role.User
 		}).run(client);
-
+		
 		console.log("USER INSERTED")
-
-		const session = await lucia.createSession(userId, {sessionId: ''});
+		console.log("CREATING NEW SESSION");
+		
+		const session = await lucia.createSession(user.id, { }, {sessionId: generateUUID() });
 		const sessionCookie = lucia.createSessionCookie(session.id);
+		console.log("NEW SESSION CREATED");
+		console.log(session)
+
 		cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 		return new Response(null, {
 			status: 302,

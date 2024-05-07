@@ -78,12 +78,12 @@ export class EdgeDBjAdapter implements Adapter {
 	}
 
 	public async setSession(value: DatabaseSession): Promise<void> {
-		console.log("AUTH ADAPTER SETTING SESSION",value.expiresAt.getTime())
 		try {
 			await this.e.insert(this.e.Session,{
+				id: value.id,
 				expiresAt: value.expiresAt,
 				user: this.e.select(this.e.User, (_) => ({
-				filter_single: {id: value.userId},
+					filter_single: {id: value.userId},
 				})),
 			}).run(this.client)
 		} catch (error) {

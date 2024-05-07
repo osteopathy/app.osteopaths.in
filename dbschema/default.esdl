@@ -4,6 +4,7 @@ module default {
     type Session {
         required user: User;
         required expiresAt: datetime;
+        
         index on (.user);
     }
     
@@ -17,13 +18,16 @@ module default {
         role: Role;
 
         multi link sessions := .<user[is Session];
+        
         createdAt: datetime {
             rewrite insert using (datetime_of_statement());
         }
+        
         updatedAt: datetime {
             rewrite insert using (datetime_of_statement());
             rewrite update using (datetime_of_statement());
         }
+        
         index on (.email)
     }
 }
