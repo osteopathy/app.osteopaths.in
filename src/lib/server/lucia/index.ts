@@ -12,16 +12,21 @@ export const lucia = new Lucia(adapter, {
 			secure: process.env.NODE_ENV === "production"
 		}
 	},
+	getSessionAttributes: (attributes) => {
+		return {
+			...attributes
+		}
+	},
 	getUserAttributes: (attributes) => {
 		return {
-			// attributes has the type of DatabaseUserAttributes
+			...attributes
 		};
 	}
 });
 
 import { Google } from "arctic";
 
-// export const google = new Google(process.env.GITHUB_CLIENT_ID!, process.env.GITHUB_CLIENT_SECRET!);
+export const google = new Google(process.env.GITHUB_CLIENT_ID!, process.env.GITHUB_CLIENT_SECRET!, process.env.NODE_ENV === "production" ? process.env.GITHUB_REDIRECT_URI! : 'http://localhost:3000');
 
 declare module "lucia" {
 	interface Register {
