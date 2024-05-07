@@ -5,6 +5,7 @@ module default {
         required user: User;
         required expiresAt: datetime;
 
+        
         index on (.user);
     }
 
@@ -27,6 +28,7 @@ module default {
         };
 
         multi link sessions := .<user[is Session];
+        
         createdAt: datetime {
             rewrite insert using (datetime_of_statement());
         }
