@@ -28,7 +28,7 @@ module default {
         };
 
         multi link sessions := .<user[is Session];
-        
+
         createdAt: datetime {
             rewrite insert using (datetime_of_statement());
         }
@@ -39,6 +39,55 @@ module default {
         }
 
         index on (.email)
+    }
+
+    type Osteopath {
+        required username: str {
+            constraint exclusive;
+        };
+
+        bio: str;
+        verification_by: str;
+
+        single link user := .<osteopath[is User];
+        student: Student;
+
+        sunday: json;
+        monday: json;
+        tuesday: json;
+        wednesday: json;
+        thursday: json;
+        friday: json;
+        saturday: json;
+
+        index on (.username)
+    }
+
+    type Student {
+        # university email address or email address used for verification of the student
+        required email: str {
+            constraint exclusive;
+        };
+        # srisriuniversity
+        university: str;
+        # 2024 batch
+        batch: str;
+        # is passed out
+	    isAlumni: bool;
+
+        required course: Course;
+        index on (.email)
+    }
+
+    type Course {
+        required code: str {
+            constraint exclusive;
+        };
+
+        required label: str;
+        required description: str;
+
+        index on (.code)
     }
 
     type Osteopath {
