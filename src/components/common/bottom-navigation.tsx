@@ -4,7 +4,7 @@ import { Settings, Calendar, Patients, Notification } from '@/components/icons'
 import Link from 'next/link'
 
 const routes = [
-	{ pathname: '/', icon: <Calendar /> },
+	{ pathname: '/appointments', icon: <Calendar /> },
 	{ pathname: '/patients', icon: <Patients /> },
 	{ pathname: '/notifications', icon: <Notification /> },
 	{ pathname: '/settings', icon: <Settings /> },
