@@ -4,10 +4,10 @@ module default {
     type Session {
         required user: User;
         required expiresAt: datetime;
-        
+
         index on (.user);
     }
-    
+
     type User {
         required email: str {
             constraint exclusive;
@@ -31,12 +31,12 @@ module default {
         createdAt: datetime {
             rewrite insert using (datetime_of_statement());
         }
-        
+
         updatedAt: datetime {
             rewrite insert using (datetime_of_statement());
             rewrite update using (datetime_of_statement());
         }
-        
+
         index on (.email)
     }
 
