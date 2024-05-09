@@ -88,4 +88,8 @@ module default {
 
         index on (.code)
     }
+
+    type Calendar {
+        
+    }
 }
