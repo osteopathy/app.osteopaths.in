@@ -4,5 +4,5 @@ export default async function Page() {
 			<h1>Sign in</h1>
 			<a href="/google/login">Sign in with Google</a>
 		</>
-	);
+	)
 }
