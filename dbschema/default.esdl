@@ -5,7 +5,6 @@ module default {
         required user: User;
         required expiresAt: datetime;
 
-        
         index on (.user);
     }
 
@@ -139,4 +138,3 @@ module default {
         index on (.code)
     }
 }
-
