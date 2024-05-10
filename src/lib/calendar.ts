@@ -82,7 +82,9 @@ export default function calendarService(credential: {
 			},
 		}
 	}
+
 	const auth = googleAuth(credential)
+
 	// '2013-02-14T13:15:03-08:00' (YYYY-MM-DDTHH:mm:ssZ)
 	const createEvent = async (
 		calendarId: string,
@@ -245,6 +247,7 @@ export default function calendarService(credential: {
 		})
 		return result
 	}
+
 	const listCalendars = async () => {
 		const myGoogleAuth = await auth.getToken()
 		const calendar = googleCalendar({
