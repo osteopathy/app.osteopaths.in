@@ -1,5 +1,3 @@
 export default function SettingPage({}) {
-	return <>
-		Setting
-	</>
+	return <>Setting</>
 }
