@@ -15,6 +15,7 @@ module default {
 
         name: str;
         picture: str;
+        phoneNumber: str;
         role: Role {
             default := "user";
         };
