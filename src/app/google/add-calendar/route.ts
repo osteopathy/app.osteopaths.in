@@ -12,8 +12,7 @@ export async function GET(): Promise<Response> {
 	// extra configrations for google
 	url.searchParams.set('access_type', 'offline')
 	url.searchParams.set('prompt', 'consent')
-    url.searchParams.set('include_granted_scopes', 'true');
-
+	url.searchParams.set('include_granted_scopes', 'true')
 
 	cookies().set('google_oauth_state', state, {
 		path: '/',

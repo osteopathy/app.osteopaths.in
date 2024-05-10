@@ -38,6 +38,7 @@ export async function GET(request: Request): Promise<Response> {
 				Authorization: `Bearer ${tokens.accessToken}`,
 			},
 		})
+
 		// const googleUserInfoResponse = await fetch(
 		// 	`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${tokens.accessToken}`,
 		// 	{
@@ -86,7 +87,7 @@ export async function GET(request: Request): Promise<Response> {
 				email: googleUser.email,
 				name: googleUser.name,
 				picture: googleUser.picture,
-				role: e.Role.User,
+				role: e.Role.user,
 			})
 			.run(client)
 

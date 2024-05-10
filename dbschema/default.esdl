@@ -90,6 +90,17 @@ module default {
     }
 
     type Calendar {
+        required gmail: str {
+            constraint exclusive
+        };
         
+        required idToken: str;
+        required accessToken: str;
+		required accessTokenExpiresAt: datetime;
+        required refreshToken: str;
+        required calendarId: str;
+        eventId: str;
+
+        index on(.gmail)
     }
 }
