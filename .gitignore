@@ -8,7 +8,7 @@
 
 package-lock.json
 pnpm-lock.yaml
-
+scripts
 # testing
 /coverage
 

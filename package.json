@@ -8,9 +8,9 @@
 		"start": "next start",
 		"lint": "next lint",
 		"format": "prettier --write .",
-		"edge:gn": "npx @edgedb/generate edgeql-js --out ./src/lib/edgeql-js",
 		"edge:migration": "edgedb migration create",
-		"edge:migrate": "edgedb migrate"
+		"edge:migrate": "edgedb migrate",
+		"edge:gn": "npx @edgedb/generate edgeql-js --out ./src/lib/edgeql-js"
 	},
 	"dependencies": {
 		"@auth/edgedb-adapter": "^1.0.0",
