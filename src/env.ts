@@ -4,6 +4,9 @@ import { z } from "zod";
  
 export const env = createEnv({
   server: {
+    EDGEDB_INSTANCE: z.string().min(1),
+    EDGEDB_SECRET_KEY: z.string().min(1),
+    
     GOOGLE_CLIENT_ID: z.string().min(1).trim(),
     GOOGLE_CLIENT_SECRET: z.string().min(1).trim(),
     GOOGLE_REDIRECT_URI: z.string().min(1).trim(),
@@ -12,6 +15,9 @@ export const env = createEnv({
   },
   // If you're using Next.js < 13.4.4, you'll need to specify the runtimeEnv manually
   runtimeEnv: {
+    EDGEDB_INSTANCE: process.env.EDGEDB_INSTANCE,
+    EDGEDB_SECRET_KEY: process.env.EDGEDB_SECRET_KEY,
+    
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI,
