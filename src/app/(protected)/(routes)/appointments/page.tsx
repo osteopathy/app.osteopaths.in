@@ -108,46 +108,43 @@ export default function AppointmentsPage() {
 
 	return (
 		<>
-			<div className="max-w-[800px] h-[4000px] flex gap-[54px] mx-auto justify-between">
-				<div className="flex-[1_0_auto]">
-					{/* Whole Timeline */}
-					<div className="h-max w-full" id="timelinewrapper">
-						<TimelineItem
-							setDate={setDate}
-							date={new Date('05/07/2024')}
-							patientDetails={{
-								time: '8:00',
-								concern: 'Arthritis',
-								patientName: 'George Orwell',
-								contactNumber: '+91 9999999999',
-							}}
-						/>
-						<TimelineItem date={new Date('05/08/2024')} setDate={setDate} />
-						<TimelineItem
-							setDate={setDate}
-							date={new Date('05/09/2024')}
-							patientDetails={{
-								time: '8:00',
-								concern: 'Arthritis',
-								patientName: 'George Orwell',
-								contactNumber: '+91 9999999999',
-							}}
-						/>
-						<TimelineItem date={new Date('05/10/2024')} setDate={setDate} />
-						<TimelineItem date={new Date('05/11/2024')} setDate={setDate} />
-						<TimelineItem
-							setDate={setDate}
-							date={new Date('05/12/2024')}
-							patientDetails={{
-								time: '8:00',
-								concern: 'Arthritis',
-								patientName: 'George Orwell',
-								contactNumber: '+91 9999999999',
-							}}
-						/>
-					</div>
+			<div className="w-full h-[4000px] flex gap-[54px] justify-between">
+				<div className="h-max w-[600px] mx-auto" id="timelinewrapper">
+					<TimelineItem
+						setDate={setDate}
+						date={new Date('05/07/2024')}
+						patientDetails={{
+							time: '8:00',
+							concern: 'Arthritis',
+							patientName: 'George Orwell',
+							contactNumber: '+91 9999999999',
+						}}
+					/>
+					<TimelineItem date={new Date('05/08/2024')} setDate={setDate} />
+					<TimelineItem
+						setDate={setDate}
+						date={new Date('05/09/2024')}
+						patientDetails={{
+							time: '8:00',
+							concern: 'Arthritis',
+							patientName: 'George Orwell',
+							contactNumber: '+91 9999999999',
+						}}
+					/>
+					<TimelineItem date={new Date('05/10/2024')} setDate={setDate} />
+					<TimelineItem date={new Date('05/11/2024')} setDate={setDate} />
+					<TimelineItem
+						setDate={setDate}
+						date={new Date('05/12/2024')}
+						patientDetails={{
+							time: '8:00',
+							concern: 'Arthritis',
+							patientName: 'George Orwell',
+							contactNumber: '+91 9999999999',
+						}}
+					/>
 				</div>
-				<div className="pt-[74px] sticky top-[74px] h-max">
+				<div className="pt-[74px] sticky top-[74px] h-max mx-auto">
 					<Calendar
 						mode="single"
 						className="border"
