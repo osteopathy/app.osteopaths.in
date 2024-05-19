@@ -2,7 +2,7 @@ import type { Config } from 'tailwindcss'
 import  { themePreset } from './tailwind.theme';
 
 const config = {
-	darkMode: ['class'],
+	darkMode: 'selector',
 	content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}'],
 	prefix: '',
 	presets: [themePreset],

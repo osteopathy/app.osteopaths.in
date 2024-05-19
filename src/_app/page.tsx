@@ -33,7 +33,7 @@ function LoginBox() {
 			<div className="w-full h-px rounded-full bg-layer-8"></div>
 		</div>
 		<Button size="sm" className="group w-full justify-between gap-x-2" variant="outline" asChild>
-			<Link className="flex gap-x-2" href="/register">
+			<Link className="flex gap-x-2" href="google/form">
 				<UserCircle2Icon className="w-5 h-5" /> Yet, to register? <ArrowRightIcon />
 			</Link>
 		</Button>

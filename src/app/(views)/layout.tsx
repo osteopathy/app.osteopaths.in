@@ -1,7 +1,14 @@
-export default function ViewLayout({
-	children,
+import { validateRequest } from "@/lib/auth"
+import { BottomBar } from "./navbars";
+
+export default async function Layout({
+    children,
 }: Readonly<{
-	children: React.ReactNode
+    children: React.ReactNode
 }>) {
-	return <>{children}</>
+    const { user, session } = await validateRequest();
+    return <>
+        {children}
+        <BottomBar />
+    </>
 }

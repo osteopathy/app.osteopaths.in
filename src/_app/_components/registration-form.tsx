@@ -4,7 +4,6 @@ import { FilePlus2Icon } from "lucide-react";
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from "react-hook-form";
 
-
 import * as z from 'zod';
 
 const phoneNumberRegExp = new RegExp(/^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/);
