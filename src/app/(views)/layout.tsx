@@ -1,14 +1,16 @@
-import { validateRequest } from "@/lib/auth"
-import { BottomBar } from "./navbars";
+import { validateRequest } from '@/lib/auth'
+import { BottomBar } from './navbars'
 
 export default async function Layout({
-    children,
+	children,
 }: Readonly<{
-    children: React.ReactNode
+	children: React.ReactNode
 }>) {
-    const { user, session } = await validateRequest();
-    return <>
-        {children}
-        <BottomBar />
-    </>
+	const { user, session } = await validateRequest()
+	return (
+		<>
+			{children}
+			<BottomBar />
+		</>
+	)
 }

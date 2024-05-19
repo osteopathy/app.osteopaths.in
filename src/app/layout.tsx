@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { Manrope } from 'next/font/google'
 import './globals.css'
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from '@/components/theme-provider'
+import { SessionProvider } from "@/lib/auth/session-provider";
+import { validateRequest } from '@/lib/auth';
 
 const manrope = Manrope({ subsets: ['latin'] })
 
@@ -10,22 +12,20 @@ export const metadata: Metadata = {
 	description: 'A web app for osteopaths to manage their patients and appointments',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode
 }>) {
+	const session = await validateRequest();
 	return (
 		<html lang="en">
 			<body className={manrope.className}>
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="system"
-					enableSystem
-					disableTransitionOnChange
-				>
-					{children}
-				</ThemeProvider>
+				<SessionProvider value={session}>
+					<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+						{children}
+					</ThemeProvider>
+				</SessionProvider>
 			</body>
 		</html>
 	)

@@ -1,5 +1,5 @@
+'use client'
 import * as React from 'react'
-
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { Button } from '@/components/ui/button'
 import {
@@ -20,14 +20,11 @@ import {
 	DrawerTitle,
 	DrawerTrigger,
 } from '@/components/ui/drawer'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { UsernameForm } from './username-form'
 
-interface DialogProps {
-	heading: string
-	description: string
-	children: React.ReactNode
-}
-
-export function DrawerDialog({ heading, description, children }: DialogProps) {
+export function UsernameFormDialog(props: {action: (userId:string,username:string) => any}) {
 	const [open, setOpen] = React.useState(false)
 	const isDesktop = useMediaQuery('(min-width: 768px)')
 
@@ -35,14 +32,10 @@ export function DrawerDialog({ heading, description, children }: DialogProps) {
 		return (
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
-					<Button variant="outline">{heading}</Button>
+					<Button variant="outline">Update Username</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px]">
-					<DialogHeader>
-						<DialogTitle>{heading}</DialogTitle>
-						<DialogDescription>{description}</DialogDescription>
-					</DialogHeader>
-					{children}
+					<UsernameForm />
 				</DialogContent>
 			</Dialog>
 		)
@@ -51,19 +44,11 @@ export function DrawerDialog({ heading, description, children }: DialogProps) {
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button variant="outline">{heading}</Button>
+				<Button variant="outline">Update Username</Button>
 			</DrawerTrigger>
 			<DrawerContent>
-				<DrawerHeader className="text-left">
-					<DrawerTitle>{heading}</DrawerTitle>
-					<DrawerDescription>{description}</DrawerDescription>
-				</DrawerHeader>
-				<div className="px-4">{children}</div>
-				<DrawerFooter className="pt-2">
-					<DrawerClose asChild>
-						<Button variant="outline">Cancel</Button>
-					</DrawerClose>
-				</DrawerFooter>
+				<UsernameForm className="px-4" />
+				<DrawerFooter className="pt-2"></DrawerFooter>
 			</DrawerContent>
 		</Drawer>
 	)

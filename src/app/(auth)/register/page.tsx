@@ -1,3 +1,3 @@
 export default async function RegistrationPage() {
-    return <div>Register</div>
+	return <div>Register</div>
 }

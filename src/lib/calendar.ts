@@ -52,7 +52,7 @@ export default function calendarService(credential: {
 						refreshToken: token.refersh_token,
 						accessTokenExpiresAt: token.expiry_date,
 					},
-				})).run(client);
+				})).run(client)
 
 				myGoogleAuth.setCredentials({
 					access_token: credential.access_token,

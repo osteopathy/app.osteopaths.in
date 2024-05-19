@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { Lucia, type User, type Session } from 'lucia'
 import { EdgeDBjAdapter } from './edgedb-adapter'
 import e from '@/lib/edgeql-js'
+import type { User as DB_USER, Osteopath } from '@/lib/edgeql-interfaces'
 import { client } from '../db'
 
 const adapter = new EdgeDBjAdapter(e, client)
@@ -47,12 +48,13 @@ export async function logout(): Promise<{ error: string | null }> {
  * This function can then be used in server components and form actions to get the current session and user.
  */
 export const validateRequest = cache(
-	async (): Promise<{ user: User; session: Session } | { user: null; session: null }> => {
+	async (): Promise<{ user: User; session: Session; osteopath: Osteopath | null } | { user: null; session: null; osteopath: null}> => {
 		const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null
 		if (!sessionId) {
 			return {
 				user: null,
 				session: null,
+				osteopath: null
 			}
 		}
 
@@ -68,7 +70,22 @@ export const validateRequest = cache(
 				cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes)
 			}
 		} catch {}
-		return result
+		if(result.user?.id) {
+			const osteopath = await e.select(e.Osteopath, () => ({
+				...e.Osteopath['*'],
+				filter_single: { id: result.user.id }
+			})).run(client);
+			return {
+				user: result.user,
+				session: result.session,
+				osteopath: osteopath || null
+			}
+		}
+
+		return {
+			...result,
+			osteopath: null
+		}
 	}
 )
 
@@ -87,4 +104,4 @@ declare module 'lucia' {
 	}
 }
 
-interface DatabaseUserAttributes {}
+interface DatabaseUserAttributes extends DB_USER {}

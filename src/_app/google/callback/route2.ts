@@ -22,8 +22,8 @@ export async function GET(request: Request): Promise<Response> {
 	const code = url.searchParams.get('code')
 	const state = url.searchParams.get('state')
 	const scope = url.searchParams.get('scope')
-	
-	const isAddCalendarCallback = scope?.includes('calendar');
+
+	const isAddCalendarCallback = scope?.includes('calendar')
 
 	const storedState = cookies().get('google_oauth_state')?.value ?? null
 	const codeVerifier = cookies().get('google_oauth_code')!.value ?? null
@@ -41,8 +41,8 @@ export async function GET(request: Request): Promise<Response> {
 			`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${tokens.accessToken}`,
 			{
 				headers: {
-					Authorization: `Bearer ${tokens.idToken}`
-				}
+					Authorization: `Bearer ${tokens.idToken}`,
+				},
 			}
 		)
 		// const response = await fetch('https://openidconnect.googleapis.com/v1/userinfo', {
@@ -69,7 +69,7 @@ export async function GET(request: Request): Promise<Response> {
 		}
 
 		// Replace this with your own DB client.
-		console.log("IS EXISTING USER:",googleUser.email)
+		console.log('IS EXISTING USER:', googleUser.email)
 		let existingUser = googleUser.email
 			? await e
 					.select(e.User, (_) => ({
@@ -78,9 +78,9 @@ export async function GET(request: Request): Promise<Response> {
 					}))
 					.run(client)
 			: false
-		
+
 		if (existingUser) {
-			console.log("EXISTING USER", existingUser.id)
+			console.log('EXISTING USER', existingUser.id)
 			const session = await lucia.createSession(existingUser.id, {}, { sessionId: generateUUID() })
 			const sessionCookie = lucia.createSessionCookie(session.id)
 
@@ -92,7 +92,7 @@ export async function GET(request: Request): Promise<Response> {
 				},
 			})
 		}
-		console.log("CREATING NEW USER:")
+		console.log('CREATING NEW USER:')
 		const user = await e
 			.insert(e.User, {
 				email: googleUser.email,
@@ -107,7 +107,6 @@ export async function GET(request: Request): Promise<Response> {
 
 		// Not working for some reson
 
-		
 		// /**
 		//  * Perform Two Searches
 		//  * 1. In db

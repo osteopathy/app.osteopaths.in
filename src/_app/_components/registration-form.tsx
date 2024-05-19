@@ -1,39 +1,44 @@
 'use client'
-import { Button } from "@/components/ui/button";
-import { FilePlus2Icon } from "lucide-react";
+import { Button } from '@/components/ui/button'
+import { FilePlus2Icon } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form'
 
-import * as z from 'zod';
+import * as z from 'zod'
 
-const phoneNumberRegExp = new RegExp(/^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/);
+const phoneNumberRegExp = new RegExp(/^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/)
 
 const registrationFormSchema = z.object({
-	fullName: z.string().min(1, {message: 'Full name is required.'}),
-	email: z.string({required_error: 'Email is required.'}).email({message: 'Enter a valid email.'}),
+	fullName: z.string().min(1, { message: 'Full name is required.' }),
+	email: z.string({ required_error: 'Email is required.' }).email({ message: 'Enter a valid email.' }),
 	phoneNumber: z.string().regex(phoneNumberRegExp, 'Enter a valid phone number.'),
-	about: z.string().min(1, {message: 'About is required.'}).max(300, {message: 'You can only enter upto 300 characters.'}),
+	about: z
+		.string()
+		.min(1, { message: 'About is required.' })
+		.max(300, { message: 'You can only enter upto 300 characters.' }),
 })
 
 const defaultValues = {
 	about: '',
 	email: '',
 	fullName: '',
-	phoneNumber: ''
-};
+	phoneNumber: '',
+}
 
-type registrationForm = z.infer<typeof registrationFormSchema>;
+type registrationForm = z.infer<typeof registrationFormSchema>
 
 export function RegistrationForm() {
-
-	const {register, handleSubmit, formState: {errors}} = useForm<registrationForm>({
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<registrationForm>({
 		resolver: zodResolver(registrationFormSchema),
-		defaultValues
-
-	});
+		defaultValues,
+	})
 
 	const onFormSubmit = (values: registrationForm) => {
-		console.log(values);
+		console.log(values)
 	}
 
 	return (
@@ -114,14 +119,16 @@ export function RegistrationForm() {
 							type="button"
 							className="relative mt-12 block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
 						>
-							<FilePlus2Icon className="mx-auto h-12 w-12 text-gray-400"/>
-							<span className="mt-2 block text-sm font-semibold text-gray-900">add your documents here</span>
+							<FilePlus2Icon className="mx-auto h-12 w-12 text-gray-400" />
+							<span className="mt-2 block text-sm font-semibold text-gray-900">
+								add your documents here
+							</span>
 						</button>
 					</div>
 				</div>
 
 				<div className="mt-8 flex justify-start">
-					<Button type='submit'>Submit</Button>
+					<Button type="submit">Submit</Button>
 				</div>
 			</form>
 		</div>

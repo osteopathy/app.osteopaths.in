@@ -1,3 +1,3 @@
 export default function PatientsPage() {
-    return <div>Patients</div>
+	return <div>Patients</div>
 }
