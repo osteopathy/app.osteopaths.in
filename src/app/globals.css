@@ -7,7 +7,7 @@
 		@apply border-border;
 	}
 	body {
-		@apply bg-background text-foreground min-h-screen;
+		@apply bg-background text-foreground min-h-screen w-full flex flex-col items-center;
 		font-synthesis-weight: none;
 		text-rendering: optimizeLegibility;
 	}
