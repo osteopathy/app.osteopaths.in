@@ -1,15 +1,10 @@
 'use client'
-import "@uploadthing/react/styles.css";
-import { generateUploadDropzone } from "@uploadthing/react";
-import type { OurFileRouter } from "@/app/api/uploadthing/core";
 import { Button } from "@/components/ui/button";
 import { getInputProps, useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
 import { registerSchema } from "./schema"
 import { useFormState, useFormStatus } from "react-dom";
 import { register } from "./action";
-
-export const UploadDropzone = generateUploadDropzone<OurFileRouter>();
 
 export default function Example() {
 	const [lastResult, action] = useFormState(register, undefined);
